@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Automating XCode 7 UI Tests with Charles and apimocker"
-date: 2015-08-03 23:28:30 +0200
+date: 2015-08-16 20:28:30 +0200
 comments: true
 categories: [XCode 7, UI Tests, CI]
 ---
