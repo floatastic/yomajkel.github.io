@@ -3,12 +3,12 @@ layout: post
 title: "Automating XCode 7 UI Tests with Charles and apimocker"
 date: 2015-08-03 23:28:30 +0200
 comments: true
-categories: [XCode 7 UI Tests, CI]
+categories: [XCode 7, UI Tests, CI]
 ---
 
-###Why do we even need this (aka short introduction)
-
 Xcode 7 brings automated UI testing on board. It doesn't seem perfectly stable yet, nor does it support all of the UI elements (as of beta 4), but it makes adding UI tests to the app fairly easy. Instead of setting up the environment for Appium, Calabash, or other frameworks, we only have to tap a checkbox to have a project with UI tests target set up.
+
+<!-- more -->
 
 To make UI tests self contained we can use HTTP mocking library (OHHTTPStub for a good example) and stub all the requests. This is pretty good solution already, but what always bothered me is that the app needs to modified for that, and the more we modify the app the farther away it goes from the binary we will are going to release.
 
