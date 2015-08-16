@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Xcode 7 | Which line is it anyway?]]></title>
   <link href="http://yomajkel.github.io/blog/categories/xcode-7/atom.xml" rel="self"/>
   <link href="http://yomajkel.github.io/"/>
-  <updated>2015-08-16T21:38:27+02:00</updated>
+  <updated>2015-08-16T21:47:09+02:00</updated>
   <id>http://yomajkel.github.io/</id>
   <author>
     <name><![CDATA[Michal Kreft]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Automating XCode 7 UI Tests With Charles and Apimocker]]></title>
-    <link href="http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker/"/>
-    <updated>2015-08-03T23:28:30+02:00</updated>
-    <id>http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker</id>
+    <link href="http://yomajkel.github.io/blog/2015/08/16/automating-xcode-7-ui-tests-with-charles-and-apimocker/"/>
+    <updated>2015-08-16T20:28:30+02:00</updated>
+    <id>http://yomajkel.github.io/blog/2015/08/16/automating-xcode-7-ui-tests-with-charles-and-apimocker</id>
     <content type="html"><![CDATA[<p>Xcode 7 brings automated UI testing on board. It doesn&rsquo;t seem perfectly stable yet, nor does it support all of the UI elements (as of beta 4), but it makes adding UI tests to the app fairly easy. Instead of setting up the environment for Appium, Calabash, or other frameworks, we only have to tap a checkbox to have a project with UI tests target set up.</p>
 
 <!-- more -->
@@ -122,7 +122,7 @@ func cellExistsExpectation() -&gt; XCTestExpectation {
 }
 </code></p>
 
-<p>This tells apimocker to return content of daily_forecast_london.json file for every GET request to <code>localhost:1337/openweathermap/data/2.5/forecast/daily</code>.</p>
+<p>This tells it to return content of daily_forecast_london.json file for every GET request to <code>localhost:1337/openweathermap/data/2.5/forecast/daily</code>.</p>
 
 <h3>Charles setup</h3>
 
