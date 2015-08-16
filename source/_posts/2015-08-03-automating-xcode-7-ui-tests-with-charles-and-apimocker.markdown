@@ -80,11 +80,11 @@ I add `apimocker_config.json` to my project to tell apimocker what to do
 }
 ```
 
-This tells apimocker to return content of daily_forecast_london.json file for every GET request to `localhost:1337/openweathermap/data/2.5/forecast/daily`.
+This tells it to return content of daily_forecast_london.json file for every GET request to `localhost:1337/openweathermap/data/2.5/forecast/daily`.
 
 ###Charles setup
 
-We need to tell Charles to map requests going to `api.openweathermap.org` onto address configured in apimocker - `localhost:1337/openweathermap`. We do that in [```Tools -> Map Remote```](http://www.charlesproxy.com/documentation/tools/map-remote/) tool. 
+We need to tell Charles to map requests going to `api.openweathermap.org` onto address configured in apimocker - `localhost:1337/openweathermap`. We do that in [`Tools -> Map Remote`](http://www.charlesproxy.com/documentation/tools/map-remote/) tool. 
 
 {% img center /images/edit_map_remote.png 'Charles Map Request config' %}
 
