@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Xcode 7 Ui Tests | Which line is it anyway?]]></title>
-  <link href="http://yomajkel.github.io/blog/categories/xcode-7-ui-tests/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Xcode 7 | Which line is it anyway?]]></title>
+  <link href="http://yomajkel.github.io/blog/categories/xcode-7/atom.xml" rel="self"/>
   <link href="http://yomajkel.github.io/"/>
-  <updated>2015-08-16T18:13:17+02:00</updated>
+  <updated>2015-08-16T21:38:27+02:00</updated>
   <id>http://yomajkel.github.io/</id>
   <author>
     <name><![CDATA[Michal Kreft]]></name>
@@ -18,9 +18,10 @@
     <link href="http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker/"/>
     <updated>2015-08-03T23:28:30+02:00</updated>
     <id>http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker</id>
-    <content type="html"><![CDATA[<h3>Why do we even need this (aka short introduction)</h3>
+    <content type="html"><![CDATA[<p>Xcode 7 brings automated UI testing on board. It doesn&rsquo;t seem perfectly stable yet, nor does it support all of the UI elements (as of beta 4), but it makes adding UI tests to the app fairly easy. Instead of setting up the environment for Appium, Calabash, or other frameworks, we only have to tap a checkbox to have a project with UI tests target set up.</p>
 
-<p>Xcode 7 brings automated UI testing on board. It doesn&rsquo;t seem perfectly stable yet, nor does it support all of the UI elements (as of beta 4), but it makes adding UI tests to the app fairly easy. Instead of setting up the environment for Appium, Calabash, or other frameworks, we only have to tap a checkbox to have a project with UI tests target set up.</p>
+<!-- more -->
+
 
 <p>To make UI tests self contained we can use HTTP mocking library (OHHTTPStub for a good example) and stub all the requests. This is pretty good solution already, but what always bothered me is that the app needs to modified for that, and the more we modify the app the farther away it goes from the binary we will are going to release.</p>
 

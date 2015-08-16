@@ -11,7 +11,10 @@
     <loc>http://yomajkel.github.io/</loc>
   </url>
   <url>
-    <loc>http://yomajkel.github.io/blog/categories/xcode-7-ui-tests/</loc>
+    <loc>http://yomajkel.github.io/blog/categories/xcode-7/</loc>
+  </url>
+  <url>
+    <loc>http://yomajkel.github.io/blog/categories/ui-tests/</loc>
   </url>
   <url>
     <loc>http://yomajkel.github.io/blog/categories/ci/</loc>

@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: 
+Disallow:
 
-Sitemap: http://yomajkel.github.io/sitemap.xml 
+Sitemap: http://yomajkel.github.io/sitemap.xml
