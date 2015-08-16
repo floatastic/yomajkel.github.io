@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Xcode 7 Ui Tests | Which line is it anyway?]]></title>
+  <link href="http://yomajkel.github.io/blog/categories/xcode-7-ui-tests/atom.xml" rel="self"/>
+  <link href="http://yomajkel.github.io/"/>
+  <updated>2015-08-16T18:06:55+02:00</updated>
+  <id>http://yomajkel.github.io/</id>
+  <author>
+    <name><![CDATA[Michal Kreft]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Automating XCode 7 UI Tests With Charles and Apimocker]]></title>
+    <link href="http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker/"/>
+    <updated>2015-08-03T23:28:30+02:00</updated>
+    <id>http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker</id>
+    <content type="html"><![CDATA[<h3>Why do we even need this (aka short introduction)</h3>
+
+<p>Xcode 7 brings automated UI testing on board. It doesn&rsquo;t seem perfectly stable yet, nor does it support all of the UI elements (as of beta 4), but it makes adding UI tests to the app fairly easy. Instead of setting up the environment for Appium, Calabash, or other frameworks, we only have to tap a checkbox to have a project with UI tests target set up.</p>
+
+<p>To make UI tests self contained we can use HTTP mocking library (OHHTTPStub for a good example) and stub all the requests. This is pretty good solution already, but what always bothered me is that the app needs to modified for that, and the more we modify the app the farther away it goes from the binary we will are going to release.</p>
+
+<p>The other solution is to use mock server outside of the app. This lets our binary send HTTP requests like it would in production environment and all the magic happens outside of our binary. I set this up using <a href="https://www.npmjs.com/package/apimocker">apimocker</a> together with <a href="http://www.charlesproxy.com">Charles HTTP Proxy</a>. Apimocker is simple to set up API mocking tool (it also sports many useful features). Charles Proxy is actually the only tool I found so far that is capable of mapping requests.</p>
+
+<h2>The test</h2>
+
+<p>For simplicity I will only write one test that will check for the number of forecast days. In <a href="http://github.com/yomajkel/Rain_Shield">Rain Shield</a> app each day is represented by table cell, so to test if correct days number is displayed I only need to count table cells.</p>
+
+<p>To quickly test for above condition, following line will suffice
+<code>swift Asserting 7 table cells
+XCTAssert(XCUIApplication().tables.elementBoundByIndex(0).cells.count == 7)
+</code></p>
+
+<p>At the start Rain Shield makes asynchronous request and only updates it&rsquo;s views after receiving response. If the line above will execute immediately the test will fail. Here is where expectations come in handy. I expect for at least one cell to be present in order to execute the rest of the test.
+<code>swift Expect table cell to be present
+func cellExistsExpectation() -&gt; XCTestExpectation {
+    let cell = XCUIApplication().tables.childrenMatchingType(.Cell).elementBoundByIndex(0)
+    let existPredicate = NSPredicate(format: "exists == 1")
+    return expectationForPredicate(existPredicate, evaluatedWithObject: cell, handler: nil)
+}
+</code></p>
+
+<p>The complete test class looks like this
+<figure class='code'><figcaption><span>Test for 7 weather cells to be present</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='swift'><span class='line'><span class="k">class</span> <span class="nl">Rain_ShieldUITests</span><span class="p">:</span> <span class="n">XCTestCase</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kr">override</span> <span class="k">func</span> <span class="n">setUp</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nb">super</span><span class="p">.</span><span class="n">setUp</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">continueAfterFailure</span> <span class="o">=</span> <span class="nb">false</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">XCUIApplication</span><span class="p">().</span><span class="n">launch</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">func</span> <span class="n">test_shouldDisplay7CellsWithWeatherInformation</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">cellExistsExpectation</span><span class="p">()</span>
+</span><span class='line'>    <span class="n">waitForExpectationsWithTimeout</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="nl">handler</span><span class="p">:</span> <span class="nb">nil</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">XCTAssert</span><span class="p">(</span><span class="n">XCUIApplication</span><span class="p">().</span><span class="n">tables</span><span class="p">.</span><span class="n">elementBoundByIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">cells</span><span class="p">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">7</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">func</span> <span class="n">cellExistsExpectation</span><span class="p">()</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">XCTestExpectation</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">let</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">XCUIApplication</span><span class="p">().</span><span class="n">tables</span><span class="p">.</span><span class="n">childrenMatchingType</span><span class="p">(.</span><span class="n">Cell</span><span class="p">).</span><span class="n">elementBoundByIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">let</span> <span class="n">existPredicate</span> <span class="o">=</span> <span class="bp">NSPredicate</span><span class="p">(</span><span class="nl">format</span><span class="p">:</span> <span class="s">&quot;exists == 1&quot;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">expectationForPredicate</span><span class="p">(</span><span class="n">existPredicate</span><span class="p">,</span> <span class="nl">evaluatedWithObject</span><span class="p">:</span> <span class="n">cell</span><span class="p">,</span> <span class="nl">handler</span><span class="p">:</span> <span class="nb">nil</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></p>
+
+<h2>Hands on request-response manipulation</h2>
+
+<p>Rain Shield app executes one request to <a href="http://api.openweathermap.org/">Open Weather Map API</a> that gets the weather for following days and this is the request we want mapped and the response mocked.</p>
+
+<h3>apimocker setup</h3>
+
+<p>I add <code>apimocker_config.json</code> to my project to tell apimocker what to do
+<code>json
+{
+  "quiet": false,
+  "port": "1337",
+  "latency": 50,
+  "logRequestHeaders": false,
+  "webServices": {
+    "openweathermap/data/2.5/forecast/daily": {
+      "verbs": ["get"],
+      "mockFile": "daily_forecast_london.json"
+    }
+  }
+}
+</code></p>
+
+<p>This tells apimocker to return content of daily_forecast_london.json file for every GET request to <code>localhost:1337/openweathermap/data/2.5/forecast/daily</code>.</p>
+
+<h3>Charles setup</h3>
+
+<p>We need to tell Charles to map requests going to <code>api.openweathermap.org</code> onto address configured in apimocker - <code>localhost:1337/openweathermap</code>. We do that in <a href="http://www.charlesproxy.com/documentation/tools/map-remote/"><code>Tools -&gt; Map Remote</code></a> tool.</p>
+
+<p><img class="center" src="/images/edit_map_remote.png" title="&lsquo;Charles Map Request config&rsquo;" ></p>
+
+<p>In &lsquo;Map From&rsquo; section we say that host is <code>api.openweathermap.org</code> and we use wildcard <code>*</code> as path (which will map everything).
+In &lsquo;Map To&rsquo; host is <code>localhost</code>, port <code>1337</code> and path is <code>/openweathermap/</code>.</p>
+
+<p>For this to work in Simulator we also need to enable Mac Proxying in Charles. Just make sure that <code>Proxy -&gt; Mac OS X Proxy</code> is checked.</p>
+
+<h2>Test Driving our setup</h2>
+
+<p>We only need to run apimocker now. After typing
+<code>sh
+apimocker --config apimocker_config.json
+</code>
+we should see some feedback about our setup. After running Rain Shield app, Charles should show us request to localhost instead of openweather API.</p>
+
+<p><img class="center" src="/images/charles_localhost_log.png" title="&lsquo;Charles localhost log&rsquo;" ></p>
+
+<p>apimocker should also print out that it mocked forecast response with <code>daily_forecast_london.json</code> content.</p>
+
+<p><img class="center" src="/images/apimocker_log.png" title="&lsquo;apimocker log&rsquo;" ></p>
+
+<p>Yay! One advantage we get already is that the request is fast and is available offline, so it might be useful for developing as well.</p>
+
+<h2>Automating it for CI testing</h2>
+
+<h3>Preparing Charles config</h3>
+
+<p>Charles has a nice config file that steers everything. We get the path to default config when we run Charles from command line
+<code>sh
+/Applications/Charles.app/Contents/MacOS/Charles -headless
+</code></p>
+
+<p>When we change configuration of Charles via UI the changes we make are reflected in this file. I reccomend first setting up our Remote Mapping and copy the file to our project once we have it.</p>
+
+<p>To run Mac OS X Proxy at startup we need to set <code>useHTTP</code> to <code>true</code>.
+<code>xml
+&lt;macOSXConfiguration&gt;
+    &lt;useHTTP&gt;true&lt;/useHTTP&gt;
+    &lt;useSOCKS&gt;false&lt;/useSOCKS&gt;
+    &lt;enableAtStartup&gt;false&lt;/enableAtStartup&gt;
+&lt;/macOSXConfiguration&gt;
+</code></p>
+
+<p>I also don&rsquo;t want Charles to check for updates during testing, so we can turn it off.
+<code>xml
+&lt;checkUpdates&gt;false&lt;/checkUpdates&gt;
+</code></p>
+
+<p>We can also enable web access, so that we can configure some things via browser under <code>http://http://control.charles/</code>
+<code>xml
+&lt;remoteControlConfiguration&gt;
+    &lt;enabled&gt;true&lt;/enabled&gt;
+    &lt;allowAnonymous&gt;true&lt;/allowAnonymous&gt;
+    &lt;users/&gt;
+&lt;/remoteControlConfiguration&gt;
+</code></p>
+
+<p>And last but not least we can also see our remote mapping configuration
+<code>xml
+&lt;entry&gt;
+    &lt;string&gt;Map Remote&lt;/string&gt;
+    &lt;map&gt;
+        &lt;toolEnabled&gt;true&lt;/toolEnabled&gt;
+        &lt;mappings&gt;
+            &lt;mapMapping&gt;
+                &lt;sourceLocation&gt;
+                    &lt;protocol&gt;http&lt;/protocol&gt;
+                    &lt;host&gt;api.openweathermap.org&lt;/host&gt;
+                    &lt;path&gt;*&lt;/path&gt;
+                &lt;/sourceLocation&gt;
+                &lt;destLocation&gt;
+                    &lt;protocol&gt;http&lt;/protocol&gt;
+                    &lt;host&gt;localhost&lt;/host&gt;
+                    &lt;port&gt;1337&lt;/port&gt;
+                    &lt;path&gt;/openweathermap/&lt;/path&gt;
+                &lt;/destLocation&gt;
+                &lt;enabled&gt;true&lt;/enabled&gt;
+            &lt;/mapMapping&gt;
+        &lt;/mappings&gt;
+    &lt;/map&gt;
+&lt;/entry&gt;
+</code></p>
+
+<p>Once we have our config file prepared we can use it to run Charles without UI
+<code>sh
+/Applications/Charles.app/Contents/MacOS/Charles -headless -config /Users/yomajkel/Projects/Rain\ Shield/Rain\ ShieldUITests/apimock/charles.config
+</code>
+One thing here is that it did not work for me with relative path to config file. It has to be absolute.</p>
+
+<h2>Starting our environment from script</h2>
+
+<p>To start Chalres and apimocker from cli we can use following script
+<figure class='code'><figcaption><span>Starting our mocking services</p></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;open -ga Charles <span class="p">&amp;</span>ndash<span class="p">;</span>args -headless -config /Users/mkreft/Projects/Rain<span class="se">\ </span>Shield/Rain<span class="se">\ </span>ShieldUITests/apimock/charles.config
+</span><span class='line'>apimocker <span class="p">&amp;</span>ndash<span class="p">;</span>config apimocker_config.json <span class="p">&amp;</span>amp<span class="p">;</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;<span class="sb">`</span>open -ga<span class="sb">`</span> opens app in background mode, passing everything after <span class="sb">`</span>--args<span class="sb">`</span> as standard arguments to the app itself
+</span><span class='line'>
+</span><span class='line'>If you don<span class="err">&#39;</span>t intend to have our environment running all the <span class="nb">time</span>, it is also easy to quit our programs within script
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;!/bin/bash&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;pgrep -f Charles <span class="p">|</span> xargs <span class="nb">kill</span>
+</span><span class='line'>pgrep -f apimocker <span class="p">|</span> xargs <span class="nb">kill</span>
+</span></code></pre></td></tr></table></div></figure></p>
+]]></content>
+  </entry>
+  
+</feed>

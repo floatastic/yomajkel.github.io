@@ -1,24 +1,90 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Which line is it anyway?]]></title>
-  <link href="http://yomajkel.github.io/atom.xml" rel="self"/>
-  <link href="http://yomajkel.github.io/"/>
-  <updated>2015-08-16T18:06:55+02:00</updated>
-  <id>http://yomajkel.github.io/</id>
-  <author>
-    <name><![CDATA[Michal Kreft]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Automating XCode 7 UI Tests With Charles and Apimocker - Which line is it anyway?</title>
+  <meta name="author" content="Michal Kreft">
 
   
-  <entry>
-    <title type="html"><![CDATA[Automating XCode 7 UI Tests With Charles and Apimocker]]></title>
-    <link href="http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker/"/>
-    <updated>2015-08-03T23:28:30+02:00</updated>
-    <id>http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker</id>
-    <content type="html"><![CDATA[<h3>Why do we even need this (aka short introduction)</h3>
+  <meta name="description" content="Why do we even need this (aka short introduction) Xcode 7 brings automated UI testing on board. It doesn&rsquo;t seem perfectly stable yet, nor does &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Which line is it anyway?" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Which line is it anyway?</a></h1>
+  
+    <h2>also about iOS development</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="yomajkel.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Automating XCode 7 UI Tests With Charles and Apimocker</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-08-03T23:28:30+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>11:28 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>Why do we even need this (aka short introduction)</h3>
 
 <p>Xcode 7 brings automated UI testing on board. It doesn&rsquo;t seem perfectly stable yet, nor does it support all of the UI elements (as of beta 4), but it makes adding UI tests to the app fairly easy. Instead of setting up the environment for Appium, Calabash, or other frameworks, we only have to tap a checkbox to have a project with UI tests target set up.</p>
 
@@ -146,7 +212,7 @@
 
 <p>We need to tell Charles to map requests going to <code>api.openweathermap.org</code> onto address configured in apimocker - <code>localhost:1337/openweathermap</code>. We do that in <a href="http://www.charlesproxy.com/documentation/tools/map-remote/"><code>Tools -&gt; Map Remote</code></a> tool.</p>
 
-<p><img class="center" src="http://yomajkel.github.io/images/edit_map_remote.png" title="'Charles Map Request config'" ></p>
+<p><img class="center" src="/images/edit_map_remote.png" title="'Charles Map Request config'" ></p>
 
 <p>In &lsquo;Map From&rsquo; section we say that host is <code>api.openweathermap.org</code> and we use wildcard <code>*</code> as path (which will map everything).
 In &lsquo;Map To&rsquo; host is <code>localhost</code>, port <code>1337</code> and path is <code>/openweathermap/</code>.</p>
@@ -165,11 +231,11 @@ In &lsquo;Map To&rsquo; host is <code>localhost</code>, port <code>1337</code> a
 <p>
 we should see some feedback about our setup. After running Rain Shield app, Charles should show us request to localhost instead of openweather API.</p>
 
-<p><img class="center" src="http://yomajkel.github.io/images/charles_localhost_log.png" title="'Charles localhost log'" ></p>
+<p><img class="center" src="/images/charles_localhost_log.png" title="'Charles localhost log'" ></p>
 
 <p>apimocker should also print out that it mocked forecast response with <code>daily_forecast_london.json</code> content.</p>
 
-<p><img class="center" src="http://yomajkel.github.io/images/apimocker_log.png" title="'apimocker log'" ></p>
+<p><img class="center" src="/images/apimocker_log.png" title="'apimocker log'" ></p>
 
 <p>Yay! One advantage we get already is that the request is fast and is available offline, so it might be useful for developing as well.</p>
 
@@ -309,7 +375,130 @@ One thing here is that it did not work for me with relative path to config file.
 
 
 
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-</feed>
+
+<span class="byline author vcard">Posted by <span class="fn">Michal Kreft</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-08-03T23:28:30+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>3</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>11:28 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ci/'>ci</a>, <a class='category' href='/blog/categories/xcode-7-ui-tests/'>xcode 7 ui tests</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker/" data-via="kreft_michal" data-counturl="http://yomajkel.github.io/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/08/03/automating-xcode-7-ui-tests-with-charles-and-apimocker/">Automating XCode 7 UI Tests With Charles and Apimocker</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/yomajkel">@yomajkel</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'yomajkel',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - Michal Kreft -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
